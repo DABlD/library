@@ -52,6 +52,15 @@
                   <option value="Student">Student</option>
                 </select>
               </div>
+              
+              <div class="id-fg" style="display: none;">
+                <div class="col-md-2">
+                  <label for="">ID: </label>
+                </div>
+                <div class="col-md-10">
+                  <input type="text" id="id" name="ID" class="form-control" placeholder="Enter ID">
+                </div>
+              </div>
 
               <div class="col-md-2">
                 <label for="">First Name: </label>
@@ -128,19 +137,40 @@
 <script>
   $('.col-md-10').css('margin-bottom', '10px');
 
-  $('#register').on('click', () => {
+  validate = [];
+  validate['fname'] = 'name';
+  validate['lname'] = 'name';
+  validate['email'] = 'email';
+  validate['contact'] = 'number';
 
+  $('#type').on('change', a => {
+    if(a.currentTarget.value == "Staff"){
+      if($('.id-fg').is(':visible')){
+        $('.id-fg').slideUp();
+      }
+    }
+    else{
+      if($('.id-fg').not(':visible')){
+        $('.id-fg').slideDown();
+      }
+      
+      text = ""
+      if(a.currentTarget.value == "Teacher"){
+        text = "Faculty ID: ";
+      }
+      else{
+        text = "Student ID: ";
+      }
+
+      $($('.id-fg div')[0])[0].innerHTML = "<b>" + text + "<b>";
+    }
+  })
+
+  $('#register').on('click', () => {
     password = $('#password').val();
     confirm_password = $('#confirm_password').val();
 
     data = {};
-
-    validate = [];
-    validate['fname'] = 'name';
-    validate['lname'] = 'name';
-    validate['email'] = 'email';
-    validate['contact'] = 'number';
-
     errors = "";
 
     $('.form-control').each((index, input) => {
@@ -204,8 +234,7 @@
       }
     });
 
-    if(password != confirm_password)
-    {
+    if(password != confirm_password){
       errors += "Password does not match.";
     }
 
