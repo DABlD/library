@@ -53,14 +53,14 @@
                 </select>
               </div>
               
-              <div class="id-fg" style="display: none;">
+              <!-- <div class="id-fg" style="display: none;">
                 <div class="col-md-2">
                   <label for="">ID: </label>
                 </div>
                 <div class="col-md-10">
                   <input type="text" id="id" name="ID" class="form-control" placeholder="Enter ID">
                 </div>
-              </div>
+              </div> -->
 
               <div class="col-md-2">
                 <label for="">First Name: </label>
@@ -143,28 +143,32 @@
   validate['email'] = 'email';
   validate['contact'] = 'number';
 
-  $('#type').on('change', a => {
-    if(a.currentTarget.value == "Staff"){
-      if($('.id-fg').is(':visible')){
-        $('.id-fg').slideUp();
-      }
-    }
-    else{
-      if($('.id-fg').not(':visible')){
-        $('.id-fg').slideDown();
-      }
-      
-      text = ""
-      if(a.currentTarget.value == "Teacher"){
-        text = "Faculty ID: ";
-      }
-      else{
-        text = "Student ID: ";
-      }
+  // $('#type').on('change', a => {
+  //   if(a.currentTarget.value == "Staff"){
+  //     if($('.id-fg').is(':visible')){
+  //       $('.id-fg').slideUp();
+  //     }
+  //   }
+  //   else{
+  //     if($('.id-fg').not(':visible')){
+  //       $('.id-fg').slideDown();
+  //     }
 
-      $($('.id-fg div')[0])[0].innerHTML = "<b>" + text + "<b>";
-    }
-  })
+  //     if(a.currentTarget.value == "Teacher"){
+  //       placeholder = "Enter Faculty ID (305414x)";
+  //       text = "Faculty ID: ";
+  //       validate['id'] = "Faculty";
+  //     }
+  //     else{
+  //       text = "Student ID: ";
+  //       validate['id'] = "Student";
+  //       placeholder = "Enter Student ID (305414xxxxxx)";
+  //     }
+
+  //     $($('.id-fg div')[0])[0].innerHTML = "<b>" + text + "<b>";
+  //     $($('.id-fg div input')[0])[0].placeholder = placeholder;
+  //   }
+  // })
 
   $('#register').on('click', () => {
     password = $('#password').val();
@@ -175,7 +179,7 @@
 
     $('.form-control').each((index, input) => {
       
-      if(index == 0){
+      if(index == 0){//|| (index == 2 && !$('.id-fg').is(':visible'))){
         return;
       }
 
@@ -207,6 +211,20 @@
               errors += $(input)[0].name + ' is an invalid number.<br>';
             }
           }
+          // else if(validate[$(input)[0].id] == 'Faculty')
+          // {
+          //   if(!/^305414[0-9]$/.test($(input).val()))
+          //   {
+          //     errors += $(input)[0].name + ' is an invalid Faculty ID format.<br>';
+          //   }
+          // }
+          // else if(validate[$(input)[0].id] == 'Student')
+          // {
+          //   if(!/^305414[0-9]{6}$/.test($(input).val()))
+          //   {
+          //     errors += $(input)[0].name + ' is an invalid Student ID format.<br>';
+          //   }
+          // }
           else
           {
             if(!/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test($(input).val()))
