@@ -6,10 +6,10 @@ class Register extends CI_Controller {
 	public function __construct()
 	{
 		parent::__construct();
-		if($this->session->has_userdata('logged_in_user'))
-		{
-			redirect('Admin');
-		}
+		// if($this->session->has_userdata('logged_in_user'))
+		// {
+		// 	redirect('Librarian');
+		// }
 		$this->load->model('Users');
 	}
 

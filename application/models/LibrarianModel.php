@@ -80,4 +80,9 @@ class LibrarianModel extends CI_Model {
 	{
 		return $this->db->insert($table, $data);
 	}
+
+	function checkIfExisting($table, $data)
+	{
+		return $this->db->where($data['column'], $data['value'])->from($table)->count_all_results();
+	}
 }

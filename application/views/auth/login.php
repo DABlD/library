@@ -42,7 +42,6 @@
     </div>
 
     <a href="Guest" class="text-center">Sign in as Guest</a><br>
-    <a href="Register" class="text-center">Register</a><br>
     <!-- <a href="#">I forgot my password</a> -->
 
   </div>
@@ -68,6 +67,13 @@
     email = $('#email').val();
     password = $('#password').val();
 
+    swal.showLoading();
+    setTimeout(() => {
+      checkAccount();
+    }, 1000);
+  })
+
+  function checkAccount(){
     $.ajax({
       url: 'Login/checkAccount',
       data: {email: email, password: password},
@@ -99,7 +105,7 @@
         }
       }
     })
-  })
+  }
 </script>
 
 </body>

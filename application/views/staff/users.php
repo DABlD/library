@@ -33,9 +33,9 @@
             <div class="box-header">
               <i class="fa fa-table"></i>
               <h3 class="box-title">Users</h3>
-              <!-- <a class="btn add-user btn-success pull-right" data-toggle="tooltip" data-placement="left" title="Add User">
+              <a class="btn add-user btn-success pull-right" data-toggle="tooltip" data-placement="left" title="Add User">
                 <i class="fa fa-plus"></i>
-              </a> -->
+              </a>
             </div>
 
             <div class="col-md-12 table-col">

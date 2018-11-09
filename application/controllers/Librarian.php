@@ -53,6 +53,12 @@ class Librarian extends CI_Controller {
 		$this->_defaultView('books');
 	}
 
+	//POST VALUE MUST BE COLUMN AND VALUE
+	public function checkIfExisting($table)
+	{
+		echo $this->LibrarianModel->checkIfExisting($table, $this->input->post());
+	}
+
 	public function getAll($table)
 	{
 		echo json_encode(array(
@@ -252,6 +258,10 @@ class Librarian extends CI_Controller {
 			$this->_flash('success', 'Book has been updated.');
 			redirect('Librarian/books','refresh');
 		}
+	}
+
+	public function addUser(){
+		$this->_defaultView('addUser');
 	}
 
 	//DEFAULTS
