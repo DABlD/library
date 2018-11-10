@@ -46,8 +46,9 @@
                     <td style="max-width: 130px">Category</td>
                     <td>Author</td>
                     <td style="max-width: 130px">Publisher</td>
-                    <td>Date Published</td>
-                    <td>Stock</td>
+                    <td>Borrow Date</td>
+                    <td>Return Date</td>
+                    <td>Fee</td>
                     <td>Actions</td>
                   </tr>
                 </thead>
@@ -84,8 +85,9 @@
         { "data": "categories", "searchable": false},
         { "data": "author_id", "searchable": false},
         { "data": "publisher_id", "searchable": false},
-        { "data": "date_published"},
-        { "data": "stock", "searchable": false},
+        { "data": "created_at"},
+        { "data": "required_return_date"},
+        { "data": "fee", "searchable": false},
         { "data": "actions", "searchable": false},
       ],
       "fnServerData": function (sSource, aoData, fnCallback){
@@ -102,7 +104,7 @@
         });
       },
       "createdRow": (row, data, index) => {
-        $(row.childNodes[7]).append('&nbsp;' + '<a onclick="viewRow(' + data.book_id + ', ' + data.id + ')" class="btn btn-xs btn-info"><i class="fa fa-search fa-2x" data-toggle="tooltip" title="View"></i></a>');
+        $(row.childNodes[8]).append('&nbsp;' + '<a onclick="viewRow(' + data.book_id + ', ' + data.id + ')" class="btn btn-xs btn-info"><i class="fa fa-search fa-2x" data-toggle="tooltip" title="View"></i></a>');
       },
       columnDefs: [ 
         {
@@ -118,7 +120,7 @@
           }
         },
         {
-          targets: 5,
+          targets: [5,6],
           render: function ( data, type, row, meta ) {
             return moment(data).format('MMM DD, YYYY');
           }
