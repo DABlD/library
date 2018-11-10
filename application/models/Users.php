@@ -13,7 +13,16 @@ class Users extends CI_Model {
 
 	function addAccount($data)
 	{
+		$data['account_id'] = $this->generateID($data['type']);
 		$data['password'] = md5($data['password']);
 		return $this->db->insert('users', $data);
+	}
+
+	function generateID($type){
+		$id = $this->db->like('type', $type != "Staff" ? $type : '')->from('users')->count_all_results() + 1;
+		if($type != "Staff"){
+			$id = "305414-" . str_pad($id, $type == "Teacher" ? 3 : 6, "0", STR_PAD_LEFT);
+		}
+		return $id;
 	}
 }
