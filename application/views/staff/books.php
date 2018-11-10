@@ -126,12 +126,10 @@
       ],
       drawCallback: () => {
         $('#booksTable tbody').append('<div class="preloader"></div>');
-      },
-      initComplete: () => {
         setTimeout(() => {
           $('.preloader').fadeOut();
         }, 500);
-      }
+      },
       // "order": [
       //   [0, "desc"]
       // ]
