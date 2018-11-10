@@ -9,7 +9,7 @@
         </li>
 
         <li>
-          <a href="<?= base_url() . 'Guest/logout' ?>">
+          <a class="logout">
             <i class="fa fa-sign-out"></i>
             <span> Logout</span>
           </a>

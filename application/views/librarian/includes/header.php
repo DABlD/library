@@ -74,7 +74,7 @@
                   <a href="#" class="btn btn-default btn-flat">Profile</a>
                 </div> -->
                 <div class="pull-right">
-                  <a href="<?= base_url() . $this->session->logged_in_user->type . '/logout' ?>" class="btn btn-default btn-flat">Sign out</a>
+                  <a class="btn btn-default btn-flat logout">Sign out</a>
                 </div>
               </li>
             </ul>
@@ -86,6 +86,8 @@
 
   <script>
     $('#membershipDate').html('Member since ' + moment("<?= $this->session->logged_in_user->created_at ?>").fromNow());
+
+
   </script>
   
   <aside class="main-sidebar">

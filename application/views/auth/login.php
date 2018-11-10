@@ -41,7 +41,7 @@
       </div>
     </div>
 
-    <a href="Guest" class="text-center">Sign in as Guest</a><br>
+    <a class="text-center" onclick="guestLogin()" style="cursor: pointer;">Sign in as Guest</a><br>
     <!-- <a href="#">I forgot my password</a> -->
 
   </div>
@@ -67,11 +67,28 @@
     email = $('#email').val();
     password = $('#password').val();
 
-    swal.showLoading();
-    setTimeout(() => {
+    swal({
+      title: 'Signing In',
+      timer: 1000,
+      onOpen: () => {
+        swal.showLoading();
+      }
+    }).then(() => {
       checkAccount();
-    }, 1000);
+    })
   })
+
+  function guestLogin(){
+    swal({
+      title: 'Signing In',
+      timer: 1000,
+      onOpen: () => {
+        swal.showLoading();
+      }
+    }).then(() => {
+      window.location.href = 'Guest';
+    })
+  }
 
   function checkAccount(){
     $.ajax({

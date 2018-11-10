@@ -44,7 +44,7 @@
         </li>
 
         <li>
-          <a href="<?= base_url() . $this->session->logged_in_user->type . '/logout' ?>">
+          <a class="logout">
             <i class="fa fa-sign-out"></i>
             <span> Logout</span>
           </a>
