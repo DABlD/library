@@ -45,7 +45,9 @@
                     <td>ID</td>
                     <td>Borrower</td>
                     <td>Title</td>
-                    <td>Borrowed On</td>
+                    <td>Borrow Date</td>
+                    <td>Return Date</td>
+                    <td>Fee</td>
                     <!-- <td>Actions</td> -->
                   </tr>
                 </thead>
@@ -76,6 +78,8 @@
         { "data": "user_id"},
         { "data": "book_id"},
         { "data": "created_at"},
+        { "data": "required_return_date"},
+        { "data": "fee"},
         // { "data": "actions"},
       ],
       "fnServerData": function (sSource, aoData, fnCallback){
@@ -90,7 +94,7 @@
       },
       "columnDefs": [ 
         {
-          "targets": 3,
+          "targets": [3,4],
           "render": function ( data, type, row, meta ) {
             return moment(data).format('MMM DD, YYYY');
           }
