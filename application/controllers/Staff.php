@@ -19,6 +19,7 @@ class Staff extends CI_Controller {
 
 	public function index()
 	{
+		updateAllFees();
 		$this->_defaultView('index');
 	}
 

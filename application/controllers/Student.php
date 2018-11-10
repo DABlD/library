@@ -19,6 +19,7 @@ class Student extends CI_Controller {
 
 	public function index()
 	{
+		updateUserFees($this->session->logged_in_user->id);
 		$this->_defaultView('index');
 	}
 

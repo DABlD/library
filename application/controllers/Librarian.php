@@ -19,6 +19,7 @@ class Librarian extends CI_Controller {
 
 	public function index()
 	{
+		updateAllFees();
 		$this->_defaultView('index');
 	}
 
