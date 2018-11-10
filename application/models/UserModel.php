@@ -78,6 +78,14 @@ class UserModel extends CI_Model {
 
 	function addRow($table, $data)
 	{
+		if($table == "borrows"){
+			$data['required_return_date'] = $this->getRequiredReturnDate();
+		}
 		return $this->db->insert($table, $data);
+	}
+
+	function getRequiredReturnDate(){
+		$this->db->select('value')->where('name', 'allowedDays');
+		return Carbon::now()->addDays($this->db->get('settings')->row()->value)->toDateTimeString();
 	}
 }
