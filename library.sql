@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 08, 2018 at 07:24 AM
+-- Generation Time: Nov 12, 2018 at 02:43 AM
 -- Server version: 10.1.31-MariaDB
 -- PHP Version: 7.2.3
 
@@ -75,7 +75,7 @@ CREATE TABLE `books` (
 
 INSERT INTO `books` (`id`, `author_id`, `publisher_id`, `date_published`, `description`, `title`, `isbn`, `categories`, `edition`, `stock`, `deleted_at`, `created_at`, `updated_at`) VALUES
 (3, 2, '[\"1\",\"6\"]', '2007-07-21', 'Throughout the six previous novels in the series, the main character Harry Potter has struggled with the difficulties of adolescence along with being famous as the only wizard to survive the Killing Curse. The curse was cast by the evil Tom Riddle, better known as Lord Voldemort, a powerful evil wizard, who had murdered Harry\'s parents and attempted to kill Harry as a baby, in the belief this would frustrate a prophecy that Harry would become his equal. As an orphan, Harry was placed in the care of his Muggle (non-magical) relatives Petunia Dursley and Vernon Dursley.', 'Harry Potter and the Deathly Hallows', '0-545-01022-5', '[\"7\",\"6\"]', 'UK', 3, NULL, '2018-09-19 20:51:24', '2018-11-08 06:01:56'),
-(4, 4, '[\"1\"]', '1994-10-01', 'The film was released in theaters on May 25, 1983, six years to the day after the release of the first film, receiving mostly positive reviews. The film grossed between $475 million[4][5] and $572 million worldwide.[6] Several home video and theatrical releases and revisions to the film followed over the next 20 years. 32 years after the film\'s original release, it was followed by a sequel trilogy, beginning in 2015 with The Force Awakens.', 'Return of the Jedi', '0-345-30767-4', '[\"6\",\"7\",\"5\"]', 'Original', 4, NULL, '2018-09-21 00:56:28', '2018-11-08 03:53:48'),
+(4, 4, '[\"1\"]', '1994-10-01', 'The film was released in theaters on May 25, 1983, six years to the day after the release of the first film, receiving mostly positive reviews. The film grossed between $475 million[4][5] and $572 million worldwide.[6] Several home video and theatrical releases and revisions to the film followed over the next 20 years. 32 years after the film\'s original release, it was followed by a sequel trilogy, beginning in 2015 with The Force Awakens.', 'Return of the Jedi', '0-345-30767-4', '[\"6\",\"7\",\"5\"]', 'Original', 2, NULL, '2018-09-21 00:56:28', '2018-11-10 06:06:50'),
 (5, 2, '[\"5\"]', '2018-09-23', 'Sometimes the only thing to fear…is yourself.', 'In a Dark, Dark Wood', '1501190474', '[\"2\",\"3\"]', 'reprint', 1, NULL, '2018-09-22 21:04:24', '2018-11-08 03:56:47');
 
 -- --------------------------------------------------------
@@ -88,8 +88,10 @@ CREATE TABLE `borrows` (
   `id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `book_id` int(11) NOT NULL,
+  `required_return_date` datetime NOT NULL,
+  `fee` float(8,2) NOT NULL DEFAULT '0.00',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `returned_on` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -98,15 +100,8 @@ CREATE TABLE `borrows` (
 -- Dumping data for table `borrows`
 --
 
-INSERT INTO `borrows` (`id`, `user_id`, `book_id`, `created_at`, `updated_at`, `returned_on`, `deleted_at`) VALUES
-(3, 3, 4, '2018-09-22 18:36:10', '2018-11-08 03:53:47', NULL, NULL),
-(4, 3, 3, '2018-09-22 18:38:16', '2018-11-08 03:54:45', '2018-11-08 03:54:45', '2018-11-08 03:54:45'),
-(5, 3, 3, '2018-09-22 19:46:33', '2018-09-22 22:48:53', '2018-09-22 22:48:53', '2018-09-22 22:48:53'),
-(6, 3, 4, '2018-09-22 19:52:13', '2018-09-22 22:46:50', '2018-09-22 22:46:50', '2018-09-22 22:46:50'),
-(7, 5, 5, '2018-09-23 03:05:11', '2018-09-23 03:05:11', NULL, NULL),
-(8, 3, 3, '2018-11-08 03:55:31', '2018-11-08 03:55:31', NULL, NULL),
-(9, 3, 3, '2018-11-08 03:56:14', '2018-11-08 06:01:55', '2018-11-07 18:01:54', '2018-11-07 18:01:54'),
-(10, 3, 5, '2018-11-08 03:56:46', '2018-11-08 03:56:46', NULL, NULL);
+INSERT INTO `borrows` (`id`, `user_id`, `book_id`, `required_return_date`, `fee`, `created_at`, `updated_at`, `returned_on`, `deleted_at`) VALUES
+(1, 3, 4, '2018-11-09 14:06:48', 5.00, '2018-11-10 06:06:48', '2018-11-10 07:13:35', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -201,11 +196,35 @@ INSERT INTO `publishers` (`id`, `name`, `location`, `deleted_at`, `created_at`, 
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `settings`
+--
+
+CREATE TABLE `settings` (
+  `id` int(11) NOT NULL,
+  `name` varchar(50) NOT NULL,
+  `display` varchar(50) NOT NULL,
+  `value` varchar(50) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `settings`
+--
+
+INSERT INTO `settings` (`id`, `name`, `display`, `value`, `created_at`, `updated_at`) VALUES
+(1, 'allowedDays', 'Allowed days', '4', '2018-11-10 05:47:33', '2018-11-10 05:47:33'),
+(2, 'excessFee', 'Excess days fee', '5.0', '2018-11-10 05:47:33', '2018-11-10 05:47:33');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `users`
 --
 
 CREATE TABLE `users` (
   `id` int(10) UNSIGNED NOT NULL,
+  `account_id` varchar(13) COLLATE utf8mb4_unicode_ci NOT NULL,
   `type` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
   `fname` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL,
   `lname` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -223,11 +242,11 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `type`, `fname`, `lname`, `gender`, `contact`, `email`, `password`, `remember_token`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'Librarian', 'David', 'Mendoza', 'Male', '09154590172', 'librarian@librarian.com', '21232f297a57a5a743894a0e4a801fc3', NULL, '2018-09-19 01:27:36', '2018-09-21 11:48:52', NULL),
-(3, 'Teacher', 'Juan', 'Dela Cruz', 'Male', '09123456789', 'teacher@teacher.com', 'e10adc3949ba59abbe56e057f20f883e', NULL, '2018-09-22 17:07:54', '2018-09-22 17:07:54', NULL),
-(4, 'Staff', 'Lib', 'Rarian', 'Female', '09129876543', 'staff@staff.com', 'e10adc3949ba59abbe56e057f20f883e', NULL, '2018-09-23 03:06:01', '2018-09-23 03:06:01', NULL),
-(5, 'Student', 'Maria', 'Clara', 'Female', '09123459876', 'student@student.com', 'e10adc3949ba59abbe56e057f20f883e', NULL, '2018-09-23 13:12:03', '2018-09-23 13:12:03', NULL);
+INSERT INTO `users` (`id`, `account_id`, `type`, `fname`, `lname`, `gender`, `contact`, `email`, `password`, `remember_token`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(1, '1', 'Librarian', 'David', 'Mendoza', 'Male', '09154590172', 'librarian@librarian.com', '21232f297a57a5a743894a0e4a801fc3', NULL, '2018-09-19 01:27:36', '2018-09-21 11:48:52', NULL),
+(3, '305414-001', 'Teacher', 'Juan', 'Dela Cruz', 'Male', '09123456789', 'teacher@teacher.com', 'e10adc3949ba59abbe56e057f20f883e', NULL, '2018-09-22 17:07:54', '2018-09-22 17:07:54', NULL),
+(4, '4', 'Staff', 'Lib', 'Rarian', 'Female', '09129876543', 'staff@staff.com', 'e10adc3949ba59abbe56e057f20f883e', NULL, '2018-09-23 03:06:01', '2018-09-23 03:06:01', NULL),
+(5, '305414-000001', 'Student', 'Maria', 'Clara', 'Female', '09123459876', 'student@student.com', 'e10adc3949ba59abbe56e057f20f883e', NULL, '2018-09-23 13:12:03', '2018-09-23 13:12:03', NULL);
 
 --
 -- Indexes for dumped tables
@@ -270,6 +289,12 @@ ALTER TABLE `publishers`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `settings`
+--
+ALTER TABLE `settings`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
@@ -295,7 +320,7 @@ ALTER TABLE `books`
 -- AUTO_INCREMENT for table `borrows`
 --
 ALTER TABLE `borrows`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `categories`
@@ -314,6 +339,12 @@ ALTER TABLE `migrations`
 --
 ALTER TABLE `publishers`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT for table `settings`
+--
+ALTER TABLE `settings`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `users`
