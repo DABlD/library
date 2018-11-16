@@ -1,14 +1,14 @@
       <ul class="sidebar-menu" data-widget="tree">
         <li class="header">MAIN NAVIGATION</li>
 
-        <li>
+        <li class="undefined">
           <a href="<?= base_url() . $this->session->logged_in_user->type . '' ?>">
             <i class="fa fa-dashboard"></i> 
             <span> Dashboard</span>
           </a>
         </li>
 
-        <li>
+        <li class="books">
           <a href="<?= base_url() . $this->session->logged_in_user->type . '/books' ?>">
             <i class="fa fa-book"></i> 
             <span> Borrow Books</span>

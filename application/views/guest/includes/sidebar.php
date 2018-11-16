@@ -1,7 +1,7 @@
       <ul class="sidebar-menu" data-widget="tree">
         <li class="header">MAIN NAVIGATION</li>
 
-        <li>
+        <li class="undefined">
           <a href="<?= base_url() . 'Guest' ?>">
             <i class="fa fa-book"></i> 
             <span> Browse Books</span>

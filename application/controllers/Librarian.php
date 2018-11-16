@@ -54,6 +54,11 @@ class Librarian extends CI_Controller {
 		$this->_defaultView('books');
 	}
 
+	public function settings()
+	{
+		$this->_defaultView('settings');
+	}
+
 	//POST VALUE MUST BE COLUMN AND VALUE
 	public function checkIfExisting($table)
 	{
@@ -168,6 +173,25 @@ class Librarian extends CI_Controller {
 			$this->LibrarianModel->updateRow('users', $this->input->post());
 			$this->_flash('success', 'User has been updated.');
 			redirect('Librarian/users','refresh');
+		}
+	}
+
+	public function validateSettingDetails()
+	{
+		$this->load->library('form_validation');
+
+		$this->form_validation->set_rules('value', 'Value', 'required|regex_match[/^[0-9.]*$/]|greater_than[0]');
+
+		if($this->form_validation->run() == FALSE)
+		{
+			$this->_flash('error', validation_errors());
+			redirect('Librarian/settings','refresh');
+		}
+		else
+		{
+			$this->LibrarianModel->updateRow('settings', $this->input->post());
+			$this->_flash('success', 'Setting has been updated.');
+			redirect('Librarian/settings','refresh');
 		}
 	}
 

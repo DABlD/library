@@ -20,6 +20,12 @@
 			window.location.href = "<?= base_url() . 'Guest/logout' ?>";
 		})
 	})
+
+	//ADD ACTIVE CLASS IN SIDEBAR
+	$(document).ready(() => {
+		index = window.location.hostname == "localhost" ? 3 : 2;
+		$('.sidebar-menu li.' + window.location.pathname.split("/")[index]).addClass("active");
+	})
 </script>
 
 </body>
