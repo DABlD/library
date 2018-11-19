@@ -50,7 +50,7 @@
                     <td>Author</td>
                     <td style="max-width: 130px">Publisher</td>
                     <td>Date Published</td>
-                    <td>Stock</td>
+                    <td>Accession<br>Number</td>
                     <td>Actions</td>
                   </tr>
                 </thead>
@@ -88,7 +88,7 @@
         { "data": "author_id", "searchable": false},
         { "data": "publisher_id", "searchable": false},
         { "data": "date_published"},
-        { "data": "stock", "searchable": false},
+        { "data": "accession_number", "searchable": false},
         { "data": "actions", "searchable": false},
       ],
       "fnServerData": function (sSource, aoData, fnCallback){
@@ -130,9 +130,9 @@
           $('.preloader').fadeOut();
         }, 500);
       },
-      // "order": [
-      //   [0, "desc"]
-      // ]
+      "order": [
+        [1, "asc"]
+      ]
     });
 
     //ADD BOOK
@@ -216,10 +216,10 @@
           <div class="row">
             <br>
             <div class="col-md-3">
-              <b><label>Stock</label></b>
+              <b><label>Accession number</label></b>
             </div>
             <div class="col-md-9">
-              <input type="number" min="0" id="stock" class="form-control" placeholder="Enter Stock"/></br>
+              <input type="text" min="0" id="accession_number" class="form-control" placeholder="Enter Accession number"/></br>
             </div>
           </div>
         `,
@@ -449,10 +449,10 @@
         <div class="row">
           <br>
           <div class="col-md-3">
-            <b><label>Stock</label></b>
+            <b><label>Accession number</label></b>
           </div>
           <div class="col-md-9">
-            <input type="number" min="0" id="stock" disabled class="form-control" placeholder="Enter Stock"/></br>
+            <input type="text" min="0" id="accession_number" disabled class="form-control" placeholder="Enter Accession number"/></br>
           </div>
         </div>
       `,
@@ -473,7 +473,7 @@
           'date_published', 
           'author_id', 
           'publisher_id', 
-          'stock'
+          'accession_number'
         ];
 
         getInputValues('books', id, values);
@@ -663,10 +663,10 @@
             <div class="row">
               <br>
               <div class="col-md-3">
-                <b><label>Stock</label></b>
+                <b><label>Accession number</label></b>
               </div>
               <div class="col-md-9">
-                <input type="number" min="0" id="stock" name="stock" class="form-control" placeholder="Enter Stock"/></br>
+                <input type="text" min="0" id="accession_number" name="accession_number" class="form-control" placeholder="Enter Accession number"/></br>
               </div>
             </div>
 
@@ -689,7 +689,7 @@
               'isbn', 
               'edition', 
               'date_published',
-              'stock',
+              'accession_number',
               'categories',
               'author_id',
               'publisher_id',
@@ -803,6 +803,48 @@
           if(choice.value)
           {
             $('#bookForm').submit();
+          }
+        })
+      }
+    })
+  }
+
+  function duplicateRow(id){
+    swal({
+      title: 'Add Copy of Book',
+      text: 'Enter Accession number',
+      input: "text",
+      showCancelButton: true,
+      preConfirm: (accession_number) => {
+        return new Promise((resolve) => {
+            swal.showLoading();
+            setTimeout(() => {
+              if(accession_number == ""){
+                swal.showValidationError('Accession number is required');
+              }
+            resolve()}, 1000);
+        })
+      },
+    }).then(choice => {
+      if(choice.value){
+        $.ajax({
+          url: 'getRow/books',
+          data: {id: id},
+          success: result => {
+            result = JSON.parse(result);
+            result.accession_number = choice.value;
+            delete result.id;
+            delete result.created_at;
+            delete result.updated_at;
+            delete result.deleted_at;
+            $.ajax({
+              url: 'duplicateBook/books',
+              method: 'POST',
+              data: result,
+              success: result => {
+                window.location.reload();
+              }
+            })
           }
         })
       }

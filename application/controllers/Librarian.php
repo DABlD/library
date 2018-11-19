@@ -152,6 +152,24 @@ class Librarian extends CI_Controller {
 		echo $this->LibrarianModel->addRow($table, $this->input->post());
 	}
 
+	public function duplicateBook($table)
+	{
+		$this->load->library('form_validation');
+		$this->form_validation->set_rules('accession_number', 'Accession number', 'required|is_unique[books.accession_number]');
+
+		if($this->form_validation->run() == FALSE)
+		{
+			$this->_flash('error', validation_errors());
+		}
+		else
+		{
+			echo $this->LibrarianModel->addRow($table, $this->input->post());
+			$this->_flash('success', 'Book has been added.');
+		}
+
+		echo '';
+	}
+
 	//VALIDATIONS
 	public function validateUserDetails()
 	{
@@ -270,7 +288,7 @@ class Librarian extends CI_Controller {
 		$this->form_validation->set_rules('date_published', 'Date Published', 'required');
 		$this->form_validation->set_rules('author_id', 'Authors', 'required');
 		$this->form_validation->set_rules('publisher_id[]', 'Publishers', 'required');
-		$this->form_validation->set_rules('stock', 'stock', 'required');
+		$this->form_validation->set_rules('accession_number', 'Accession number', 'required|is_unique[books.accession_number]');
 
 		if($this->form_validation->run() == FALSE)
 		{
