@@ -74,6 +74,11 @@ class StaffModel extends CI_Model {
 		return $this->db->where('id', $id)->get($table)->row();
 	}
 
+	function getWhere($table, $data)
+	{
+		return $this->db->where($data['column'], $data['value'])->get($table)->result();
+	}
+
 	function deleteRow($table, $id)
 	{
 		return $this->db->where('id', $id)->set('deleted_at', Carbon::now())->update($table);

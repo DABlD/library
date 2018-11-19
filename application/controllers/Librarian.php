@@ -54,6 +54,11 @@ class Librarian extends CI_Controller {
 		$this->_defaultView('books');
 	}
 
+	public function transactions()
+	{
+		$this->_defaultView('transactions');
+	}
+
 	public function settings()
 	{
 		$this->_defaultView('settings');
@@ -145,6 +150,13 @@ class Librarian extends CI_Controller {
 	public function getRow2($table)
 	{
 		echo json_encode(array($this->LibrarianModel->getRow($table, $this->input->get('id')), $this->input->get('ref')));
+	}
+
+	public function getWhere($table)
+	{
+		echo json_encode(array(
+			'data' => $this->LibrarianModel->getWhere($table, $this->input->post())
+		));
 	}
 
 	public function deleteRow($table)

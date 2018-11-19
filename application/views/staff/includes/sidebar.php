@@ -43,6 +43,13 @@
           </a>
         </li>
 
+        <li class="transactions">
+          <a href="<?= base_url() . $this->session->logged_in_user->type . '/transactions' ?>">
+            <i class="fa fa-file"></i>
+            <span> Transactions</span>
+          </a>
+        </li>
+
         <li>
           <a class="logout">
             <i class="fa fa-sign-out"></i>

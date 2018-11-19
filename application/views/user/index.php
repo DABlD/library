@@ -290,17 +290,32 @@
                     title: 'Successfully Returned Book.',
                     timer: 800,
                     showConfirmButton: false
+                  }).then(() => {
+                    $.ajax({
+                      url: '<?= $this->session->logged_in_user->type ?>/updateRow/books',
+                      data: {id: id, status: 'Available'},
+                      method: 'POST',
+                      success: result => {
+                        if(result)
+                        {
+                          swal({
+                            type: 'success',
+                            title: 'Successfully Updated Book Status.',
+                            timer: 800,
+                            showConfirmButton: false
+                          }).then(() => {
+                            $('#booksTable').DataTable().ajax.reload(() => {
+                              setTimeout(() => {
+                                $('.preloader').fadeOut();
+                              }, 500);
+                            });
+                          })
+                        }
+                      }
+                    })
                   })
                 }
               }
-            }).then(() => {
-              setTimeout(() => {
-                $('#booksTable').DataTable().ajax.reload(() => {
-                  setTimeout(() => {
-                    $('.preloader').fadeOut();
-                  }, 500);
-                });
-              }, 1000);
             })
           }
         })

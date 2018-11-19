@@ -28,6 +28,11 @@ class Teacher extends CI_Controller {
 		$this->_defaultView('books');
 	}
 
+	public function transactions()
+	{
+		$this->_defaultView('transactions');
+	}
+
 	public function logout()
 	{
 		$this->session->sess_destroy();
@@ -150,6 +155,13 @@ class Teacher extends CI_Controller {
 	public function getRow2($table)
 	{
 		echo json_encode(array($this->UserModel->getRow($table, $this->input->get('id')), $this->input->get('ref')));
+	}
+
+	public function getWhere($table)
+	{
+		echo json_encode(array(
+			'data' => $this->UserModel->getWhere($table, $this->input->post())
+		));
 	}
 
 	public function deleteRow($table)
