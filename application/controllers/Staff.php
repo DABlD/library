@@ -54,10 +54,22 @@ class Staff extends CI_Controller {
 		$this->_defaultView('books');
 	}
 
+	public function updateRow($table)
+	{
+		echo $this->StaffModel->updateRow($table, $this->input->post());
+	}
+
 	public function getAll($table)
 	{
 		echo json_encode(array(
 			'data' => $this->StaffModel->getAll($table, $this->input->get('withActions')),
+		));
+	}
+
+	public function getAllWithJoin($table1, $table2)
+	{
+		echo json_encode(array(
+			'data' => $this->StaffModel->getAllWithJoin($table1, $table2, $this->input->get()),
 		));
 	}
 
@@ -132,6 +144,24 @@ class Staff extends CI_Controller {
 	public function addRow($table)
 	{
 		echo $this->StaffModel->addRow($table, $this->input->post());
+	}
+
+	public function duplicateBook($table)
+	{
+		$this->load->library('form_validation');
+		$this->form_validation->set_rules('accession_number', 'Accession number', 'required|is_unique[books.accession_number]');
+
+		if($this->form_validation->run() == FALSE)
+		{
+			$this->_flash('error', validation_errors());
+		}
+		else
+		{
+			echo $this->StaffModel->addRow($table, $this->input->post());
+			$this->_flash('success', 'Book has been added.');
+		}
+
+		echo '';
 	}
 
 	//VALIDATIONS
@@ -233,7 +263,7 @@ class Staff extends CI_Controller {
 		$this->form_validation->set_rules('date_published', 'Date Published', 'required');
 		$this->form_validation->set_rules('author_id', 'Authors', 'required');
 		$this->form_validation->set_rules('publisher_id[]', 'Publishers', 'required');
-		$this->form_validation->set_rules('stock', 'stock', 'required');
+		$this->form_validation->set_rules('accession_number', 'Accession number', 'required|is_unique[books.accession_number]');
 
 		if($this->form_validation->run() == FALSE)
 		{

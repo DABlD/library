@@ -23,6 +23,29 @@ class StaffModel extends CI_Model {
 			if($withActions)
 			{
 				$row->actions = '<a onclick="editRow(' . $row->id . ')" class="btn btn-xs btn-primary"><i class="fa fa-pencil fa-2x" data-toggle="tooltip" title="Edit"></i></a>';
+
+				if($table == "books"){
+					$row->actions .= '&nbsp;' . '<a onclick="duplicateRow(' . $row->id . ')" class="btn btn-xs btn-warning"><i class="fa fa-files-o fa-2x" data-toggle="tooltip" title="Add Copy"></i></a>';
+				}
+			}
+			else
+			{
+				$row->actions = '';
+			}
+		}
+
+		return $results;
+	}
+
+	function getAllWithJoin($table1, $table2, $data)
+	{
+		$results = $this->db->where($table1 . '.deleted_at', null)->join($table1, $table2 . '.id = ' . $table1 . '.' . $data['ref'], $data['type'])->get($table2)->result();
+
+		foreach($results as $row)
+		{
+			if($data['withActions'])
+			{
+				$row->actions = '<a onclick="deleteRow(' . $row->id . ')" class="btn btn-xs btn-danger"><i class="fa fa-trash-o fa-2x" data-toggle="tooltip" title="Delete"></i></a>' . '&nbsp;' . '<a onclick="editRow(' . $row->id . ')" class="btn btn-xs btn-primary"><i class="fa fa-pencil fa-2x" data-toggle="tooltip" title="Edit"></i></a>';
 			}
 			else
 			{

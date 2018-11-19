@@ -47,7 +47,8 @@
                     <td>Author</td>
                     <td style="max-width: 130px">Publisher</td>
                     <td>Date Published</td>
-                    <td>Stock</td>
+                    <td>Accession<br>Number</td>
+                    <td>Status</td>
                     <td>Actions</td>
                   </tr>
                 </thead>
@@ -85,7 +86,8 @@
         { "data": "author_id", "searchable": false},
         { "data": "publisher_id", "searchable": false},
         { "data": "date_published"},
-        { "data": "stock", "searchable": false},
+        { "data": "accession_number", "searchable": false},
+        { "data": "status"},
         { "data": "actions", "searchable": false},
       ],
       "fnServerData": function (sSource, aoData, fnCallback){
@@ -96,7 +98,7 @@
         });
       },
       "createdRow": (row, data, index) => {
-        $(row.childNodes[7]).append('&nbsp;' + '<a onclick="viewRow(' + data.id + ')" class="btn btn-xs btn-info"><i class="fa fa-search fa-2x" data-toggle="tooltip" title="View"></i></a>');
+        $(row.childNodes[8]).append('&nbsp;' + '<a onclick="viewRow(' + data.id + ')" class="btn btn-xs btn-info"><i class="fa fa-search fa-2x" data-toggle="tooltip" title="View"></i></a>');
       },
       columnDefs: [ 
         {
@@ -124,9 +126,9 @@
           $('.preloader').fadeOut();
         }, 500);
       },
-      // "order": [
-      //   [0, "desc"]
-      // ]
+      "order": [
+        [1, "asc"]
+      ]
     });
   });
 
@@ -215,10 +217,20 @@
         <div class="row">
           <br>
           <div class="col-md-3">
-            <b><label>Stock</label></b>
+            <b><label>Accession number</label></b>
           </div>
           <div class="col-md-9">
-            <input type="number" min="0" id="stock" disabled class="form-control" placeholder="Enter Stock"/></br>
+            <input type="text" min="0" id="accession_number" disabled class="form-control" placeholder="Enter Accession number"/></br>
+          </div>
+        </div>
+
+        <div class="row">
+          <br>
+          <div class="col-md-3">
+            <b><label>Status</label></b>
+          </div>
+          <div class="col-md-9">
+            <input type="text" min="0" id="status" disabled class="form-control" placeholder="Status"/></br>
           </div>
         </div>
       `,
@@ -241,7 +253,8 @@
           'date_published', 
           'author_id', 
           'publisher_id', 
-          'stock'
+          'accession_number',
+          'status'
         ];
 
         getInputValues('books', id, values);
@@ -249,72 +262,58 @@
     }).then(choice => {
       if(choice.value)
       {
-        if($('#stock').val() > 0)
-        {
-          stock = $('#stock').val();
-
-          swal({
-            type: 'question',
-            title: 'Are you sure you want to borrow this book ?',
-            showCancelButton: true,
-            cancelButtonText: 'No',
-            confirmButtonText: 'Yes',
-          }).then(choice2 => {
-            if(choice2.value)
-            {
-              $.ajax({
-                url: 'addRow/borrows',
-                data: {user_id: <?= $this->session->logged_in_user->id ?>,book_id: id},
-                method: 'POST',
-                success: result => {
-                  if(result)
-                  {
-                    swal({
-                      type: 'success',
-                      title: 'Successfully Borrowed Book.',
-                      timer: 800,
-                      showConfirmButton: false
-                    })
-                  }
-                }
-              }).then(() => {
-                setTimeout(() => {
-                  $.ajax({
-                    url: 'updateRow/books',
-                    data: {id: id, stock: (stock - 1)},
-                    method: 'POST',
-                    success: result => {
-                      if(result)
-                      {
-                        swal({
-                          type: 'success',
-                          title: 'Successfully Updated Stock.',
-                          timer: 800,
-                          showConfirmButton: false
-                        }).then(() => {
-                          $('#booksTable').DataTable().ajax.reload(() => {
-                            setTimeout(() => {
-                              $('.preloader').fadeOut();
-                            }, 500);
-                          });
-                        })
-                      }
-                    }
+        swal({
+          type: 'question',
+          title: 'Are you sure you want to borrow this book ?',
+          showCancelButton: true,
+          cancelButtonText: 'No',
+          confirmButtonText: 'Yes',
+        }).then(choice2 => {
+          if(choice2.value)
+          {
+            $.ajax({
+              url: 'addRow/borrows',
+              data: {user_id: <?= $this->session->logged_in_user->id ?>,book_id: id},
+              method: 'POST',
+              success: result => {
+                if(result)
+                {
+                  swal({
+                    type: 'success',
+                    title: 'Successfully Borrowed Book.',
+                    timer: 800,
+                    showConfirmButton: false
                   })
-                }, 1000);
-              })
-            }
-          })
-        }
-        else
-        {
-          swal({
-            type: 'error',
-            title: 'Out of stock.',
-            showConfirmButton: false,
-            timer: 800,
-          }) 
-        }
+                }
+              }
+            }).then(() => {
+              setTimeout(() => {
+                $.ajax({
+                  url: 'updateRow/books',
+                  data: {id: id, status: 'Reserved'},
+                  method: 'POST',
+                  success: result => {
+                    if(result)
+                    {
+                      swal({
+                        type: 'success',
+                        title: 'Successfully Reserved Book.',
+                        timer: 800,
+                        showConfirmButton: false
+                      }).then(() => {
+                        $('#booksTable').DataTable().ajax.reload(() => {
+                          setTimeout(() => {
+                            $('.preloader').fadeOut();
+                          }, 500);
+                        });
+                      })
+                    }
+                  }
+                })
+              }, 1000);
+            })
+          }
+        })
       }
     })
   }
@@ -364,6 +363,12 @@
           {
             //REQUIRED LINE
             $('#' + column).val(result[column]);
+
+            if(column == "status"){
+              if(result[column] != "Available"){
+                $('.swal2-confirm').attr('disabled', true);
+              }
+            }
           }
         })
       }

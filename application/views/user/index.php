@@ -6,11 +6,11 @@
     <section class="content-header">
       <h1>
         <?= $type ?>
-        <small>Book Management</small>
+        <small>Borrows and Reservations</small>
       </h1>
       <ol class="breadcrumb">
         <li><a href="<?= base_url() . $this->session->logged_in_user->type ?>"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active">Book Management</li>
+        <li class="active">Borrows and Reservations</li>
       </ol>
     </section>
 
@@ -34,14 +34,14 @@
 
             <div class="box-header">
               <i class="fa fa-table"></i>
-              <h3 class="box-title">Books</h3>
+              <h3 class="box-title">Borrows and Reservations</h3>
             </div>
 
             <div class="col-md-12 table-col">
               <table id="booksTable" class="row-border hover">
                 <thead>
                   <tr>
-                    <td>Book ID</td>
+                    <td>Status</td>
                     <td style="max-width: 130px">Title</td>
                     <td style="max-width: 130px">Category</td>
                     <td>Author</td>
@@ -80,7 +80,7 @@
       "sPaginationType": "full_numbers",
       "processing": true,
       "columns": [
-        { "data": "book_id"},
+        { "data": "status"},
         { "data": "title"},
         { "data": "categories", "searchable": false},
         { "data": "author_id", "searchable": false},
@@ -223,10 +223,20 @@
         <div class="row">
           <br>
           <div class="col-md-3">
-            <b><label>Stock</label></b>
+            <b><label>Accession number</label></b>
           </div>
           <div class="col-md-9">
-            <input type="number" min="0" id="stock" disabled class="form-control" placeholder="Enter Stock"/></br>
+            <input type="text" min="0" id="accession_number" disabled class="form-control" placeholder="Enter Accession number"/></br>
+          </div>
+        </div>
+
+        <div class="row">
+          <br>
+          <div class="col-md-3">
+            <b><label>Status</label></b>
+          </div>
+          <div class="col-md-9">
+            <input type="text" min="0" id="status" disabled class="form-control" placeholder="Enter Status"/></br>
           </div>
         </div>
       `,
@@ -249,7 +259,8 @@
           'date_published', 
           'author_id', 
           'publisher_id', 
-          'stock'
+          'accession_number',
+          'status'
         ];
 
         getInputValues('books', id, values);
@@ -257,8 +268,6 @@
     }).then(choice => {
       if(choice.value)
       {
-        stock = $('#stock').val();
-
         swal({
           type: 'question',
           title: 'Are you sure you want to return this book ?',
@@ -286,28 +295,11 @@
               }
             }).then(() => {
               setTimeout(() => {
-                $.ajax({
-                  url: '<?= $this->session->logged_in_user->type ?>/updateRow/books',
-                  data: {id: id, stock: (parseInt(stock) + 1)},
-                  method: 'POST',
-                  success: result => {
-                    if(result)
-                    {
-                      swal({
-                        type: 'success',
-                        title: 'Successfully Updated Stock.',
-                        timer: 800,
-                        showConfirmButton: false
-                      }).then(() => {
-                        $('#booksTable').DataTable().ajax.reload(() => {
-                          setTimeout(() => {
-                            $('.preloader').fadeOut();
-                          }, 500);
-                        });
-                      })
-                    }
-                  }
-                })
+                $('#booksTable').DataTable().ajax.reload(() => {
+                  setTimeout(() => {
+                    $('.preloader').fadeOut();
+                  }, 500);
+                });
               }, 1000);
             })
           }
@@ -361,6 +353,12 @@
           {
             //REQUIRED LINE
             $('#' + column).val(result[column]);
+
+            if(column == "status"){
+              if(result[column] != "Borrowed"){
+                $('.swal2-confirm').attr('disabled', true);
+              }
+            }
           }
         })
       }

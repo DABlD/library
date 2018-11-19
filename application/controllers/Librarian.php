@@ -65,6 +65,11 @@ class Librarian extends CI_Controller {
 		echo $this->LibrarianModel->checkIfExisting($table, $this->input->post());
 	}
 
+	public function updateRow($table)
+	{
+		echo $this->LibrarianModel->updateRow($table, $this->input->post());
+	}
+
 	public function getAll($table)
 	{
 		echo json_encode(array(

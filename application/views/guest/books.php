@@ -47,7 +47,7 @@
                     <td>Author</td>
                     <td style="max-width: 130px">Publisher</td>
                     <td>Date Published</td>
-                    <td>Stock</td>
+                    <td>Accession<br>Number</td>
                     <td>Actions</td>
                   </tr>
                 </thead>
@@ -85,7 +85,7 @@
         { "data": "author_id", "searchable": false},
         { "data": "publisher_id", "searchable": false},
         { "data": "date_published"},
-        { "data": "stock", "searchable": false},
+        { "data": "accession_number"},
         { "data": "actions", "searchable": false},
       ],
       "fnServerData": function (sSource, aoData, fnCallback){
@@ -124,9 +124,9 @@
           $('.preloader').fadeOut();
         }, 500);
       },
-      // "order": [
-      //   [0, "desc"]
-      // ]
+      "order": [
+        [1, "asc"]
+      ]
     });
   });
 
@@ -215,10 +215,20 @@
         <div class="row">
           <br>
           <div class="col-md-3">
-            <b><label>Stock</label></b>
+            <b><label>Accession Number</label></b>
           </div>
           <div class="col-md-9">
-            <input type="number" min="0" id="stock" disabled class="form-control" placeholder="Enter Stock"/></br>
+            <input type="number" min="0" id="accession_number" disabled class="form-control" placeholder="Enter Accession Number"/></br>
+          </div>
+        </div>
+
+        <div class="row">
+          <br>
+          <div class="col-md-3">
+            <b><label>Status</label></b>
+          </div>
+          <div class="col-md-9">
+            <input type="text" min="0" id="status" disabled class="form-control" placeholder="Enter Status"/></br>
           </div>
         </div>
       `,
@@ -239,7 +249,8 @@
           'date_published', 
           'author_id', 
           'publisher_id', 
-          'stock'
+          'accession_number',
+          'status',
         ];
 
         getInputValues('books', id, values);

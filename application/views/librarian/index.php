@@ -32,7 +32,7 @@
 
             <div class="box-header">
               <i class="fa fa-table"></i>
-              <h3 class="box-title">Borrowed Books</h3>
+              <h3 class="box-title">Borrowed and Reserved Books</h3>
               <!-- <a class="btn add-user btn-success pull-right" data-toggle="tooltip" data-placement="left" title="Add User">
                 <i class="fa fa-plus"></i>
               </a> -->
@@ -43,12 +43,13 @@
                 <thead>
                   <tr>
                     <td>ID</td>
-                    <td>Borrower</td>
-                    <td>Title</td>
+                    <td style="max-width: 80px;">Borrower</td>
+                    <td style="max-width: 130px;">Title</td>
                     <td>Borrow Date</td>
                     <td>Return Date</td>
                     <td>Fee</td>
-                    <!-- <td>Actions</td> -->
+                    <td>Status</td>
+                    <td>Action</td>
                   </tr>
                 </thead>
               </table>
@@ -69,9 +70,11 @@
 <script>
 
   $(document).ready(() => {
+    var bookStatus;
+
     var table = $("#usersTable").dataTable({
       "bProcessing": true,
-      "sAjaxSource": "<?= $this->session->logged_in_user->type ?>/getAll/borrows",
+      "sAjaxSource": "<?= $this->session->logged_in_user->type ?>/getAllWithJoin/borrows/books",
       "sPaginationType": "full_numbers",
       "columns": [
         { "data": "id"},
@@ -80,15 +83,18 @@
         { "data": "created_at"},
         { "data": "required_return_date"},
         { "data": "fee"},
-        // { "data": "actions"},
+        { "data": "status"},
+        // { "data": "action"},
       ],
       "fnServerData": function (sSource, aoData, fnCallback){
         $.ajax({
           url: sSource,
           dataType: "json",
-          // data: {
-          //   withActions: 1
-          // },
+          data: {
+            withActions: 0,
+            ref: 'book_id',
+            type: ''
+          },
           success: fnCallback
         });
       },
@@ -112,6 +118,26 @@
               }
             })
           }
+        },
+        {
+          "targets": 6,
+          "render": function ( data, type, row, meta ) {
+            bookStatus = data;
+            return data;
+          }
+        },
+        {
+          "targets": 7,
+          "createdCell": (td,id) => {
+            show = ' onclick="handOver(' + $(td).parent().find('td:first')[0].innerText + ')" ';
+
+            if(bookStatus == "Borrowed"){
+              show = " disabled";
+            }
+
+            $(td)[0].innerHTML = '<a' + show + ' class="btn btn-xs btn-success handOver">Hand Over</i></a>';
+          },
+          "defaultContent": ''
         },
         {
           "targets": 2,
@@ -138,6 +164,40 @@
       // ]
     });
   });
+
+  function handOver(id){
+    $.ajax({
+      url: "<?= $this->session->logged_in_user->type ?>/getRow/borrows",
+      data: {id: id},
+      success: result => {
+        result = JSON.parse(result);
+        id = result.book_id;
+
+        $.ajax({
+          url: '<?= $this->session->logged_in_user->type ?>/updateRow/books',
+          data: {id: id, status: 'Borrowed'},
+          method: 'POST',
+          success: result => {
+            if(result)
+            {
+              swal({
+                type: 'success',
+                title: 'Successfully Updated Book Status.',
+                timer: 800,
+                showConfirmButton: false
+              }).then(() => {
+                $('#usersTable').DataTable().ajax.reload(() => {
+                  setTimeout(() => {
+                    $('.preloader').fadeOut();
+                  }, 500);
+                });
+              })
+            }
+          }
+        })
+      }
+    })
+  }
 
   $('.table-col').css('float', 'none');
 </script>
