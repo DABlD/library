@@ -11,12 +11,14 @@ class Guest extends CI_Controller {
 
 	public function index()
 	{
+		addTrail("A guest has logged in");
 		$this->_defaultView('books');
 	}
 
 	public function logout()
 	{
 		$this->session->sess_destroy();
+		addTrail("A guest has logged out");
 		redirect('Login','refresh');
 	}
 

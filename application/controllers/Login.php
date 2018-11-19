@@ -29,6 +29,7 @@ class Login extends CI_Controller {
 			unset($result->password);
 			$result->full_name = $result->fname . ' ' . $result->lname;
 			$this->session->set_userdata('logged_in_user', $result);
+			addTrail($result->full_name . ' has logged in.');
 
 			echo json_encode(array($result->type, $result->fname . ' ' . $result->lname));
 		}

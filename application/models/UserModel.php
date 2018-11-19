@@ -72,11 +72,13 @@ class UserModel extends CI_Model {
 
 	function deleteRow($table, $id)
 	{
+		addTrail($this->session->logged_in_user->full_name . " has deleted '" . $table . "' table with id #" . $id);
 		return $this->db->where('id', $id)->set('deleted_at', Carbon::now())->update($table);
 	}
 
 	function updateRow($table, $data)
 	{
+		addTrail($this->session->logged_in_user->full_name . " has updated '" . $table . "' table with id #" . $id);
 		$data['updated_at'] = Carbon::now();
 		return $this->db->where('id', $data['id'])->update($table, $data);
 	}
@@ -84,6 +86,7 @@ class UserModel extends CI_Model {
 	function addRow($table, $data)
 	{
 		if($table == "borrows"){
+			addTrail($this->session->logged_in_user->full_name . " has borrowed a book with book id of #" . $data['book_id']);
 			$data['required_return_date'] = $this->getRequiredReturnDate();
 		}
 		return $this->db->insert($table, $data);

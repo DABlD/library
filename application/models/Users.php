@@ -15,6 +15,7 @@ class Users extends CI_Model {
 	{
 		$data['account_id'] = $this->generateID($data['type']);
 		$data['password'] = md5($data['password']);
+		addTrail($data['fname'] . ' ' . $data['lname'] . " has been registered");
 		return $this->db->insert('users', $data);
 	}
 

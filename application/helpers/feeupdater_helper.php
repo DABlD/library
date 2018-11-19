@@ -27,4 +27,11 @@ function doUpdate($borrows){
 	}
 }
 
+function addTrail($action){
+	$CI =& get_instance();
+	$CI->db->insert('audit_trail', array(
+		'action' => $action
+	));
+}
+
 ?>

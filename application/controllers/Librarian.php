@@ -26,6 +26,7 @@ class Librarian extends CI_Controller {
 	public function logout()
 	{
 		$this->session->sess_destroy();
+		addTrail($this->session->logged_in_user->full_name . " has logged out.");
 		redirect('Login','refresh');
 	}
 

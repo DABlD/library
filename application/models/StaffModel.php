@@ -81,17 +81,20 @@ class StaffModel extends CI_Model {
 
 	function deleteRow($table, $id)
 	{
+		addTrail($this->session->logged_in_user->full_name . " has deleted '" . $table . "' table with id #" . $id);
 		return $this->db->where('id', $id)->set('deleted_at', Carbon::now())->update($table);
 	}
 
 	function updateRow($table, $data)
 	{
+		addTrail($this->session->logged_in_user->full_name . " has updated '" . $table . "' table with id #" . $id);
 		$data['updated_at'] = Carbon::now();
 		return $this->db->where('id', $data['id'])->update($table, $data);
 	}
 
 	function addRow($table, $data)
 	{
+		addTrail($this->session->logged_in_user->full_name . " has added in '" . $table . "' table");
 		return $this->db->insert($table, $data);
 	}
 }
