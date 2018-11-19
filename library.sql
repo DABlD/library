@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 12, 2018 at 02:43 AM
+-- Generation Time: Nov 19, 2018 at 08:52 AM
 -- Server version: 10.1.31-MariaDB
 -- PHP Version: 7.2.3
 
@@ -21,6 +21,20 @@ SET time_zone = "+00:00";
 --
 -- Database: `library`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `audit_trail`
+--
+
+CREATE TABLE `audit_trail` (
+  `id` int(11) NOT NULL,
+  `action` varchar(50) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `deleted_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -45,7 +59,8 @@ INSERT INTO `authors` (`id`, `fname`, `lname`, `deleted_at`, `created_at`, `upda
 (1, 'David', 'Mendoza', '2018-09-19 09:00:52', '2018-09-19 09:00:00', '2018-09-19 09:00:00'),
 (2, 'Mendoza', 'David', NULL, '2018-09-19 09:01:10', '2018-09-19 09:03:15'),
 (3, 'David', 'Divad', NULL, '2018-09-19 09:03:04', '2018-09-19 09:03:04'),
-(4, 'George', 'Lucas', NULL, '2018-09-21 00:56:00', '2018-09-21 00:56:00');
+(4, 'George', 'Lucas', NULL, '2018-09-21 00:56:00', '2018-09-21 00:56:00'),
+(5, 'Author', 'LN', '2018-11-15 02:41:07', '2018-11-15 02:40:55', '2018-11-15 02:41:02');
 
 -- --------------------------------------------------------
 
@@ -63,7 +78,8 @@ CREATE TABLE `books` (
   `isbn` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
   `categories` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `edition` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `stock` int(11) NOT NULL,
+  `accession_number` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Available',
   `deleted_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
@@ -73,10 +89,11 @@ CREATE TABLE `books` (
 -- Dumping data for table `books`
 --
 
-INSERT INTO `books` (`id`, `author_id`, `publisher_id`, `date_published`, `description`, `title`, `isbn`, `categories`, `edition`, `stock`, `deleted_at`, `created_at`, `updated_at`) VALUES
-(3, 2, '[\"1\",\"6\"]', '2007-07-21', 'Throughout the six previous novels in the series, the main character Harry Potter has struggled with the difficulties of adolescence along with being famous as the only wizard to survive the Killing Curse. The curse was cast by the evil Tom Riddle, better known as Lord Voldemort, a powerful evil wizard, who had murdered Harry\'s parents and attempted to kill Harry as a baby, in the belief this would frustrate a prophecy that Harry would become his equal. As an orphan, Harry was placed in the care of his Muggle (non-magical) relatives Petunia Dursley and Vernon Dursley.', 'Harry Potter and the Deathly Hallows', '0-545-01022-5', '[\"7\",\"6\"]', 'UK', 3, NULL, '2018-09-19 20:51:24', '2018-11-08 06:01:56'),
-(4, 4, '[\"1\"]', '1994-10-01', 'The film was released in theaters on May 25, 1983, six years to the day after the release of the first film, receiving mostly positive reviews. The film grossed between $475 million[4][5] and $572 million worldwide.[6] Several home video and theatrical releases and revisions to the film followed over the next 20 years. 32 years after the film\'s original release, it was followed by a sequel trilogy, beginning in 2015 with The Force Awakens.', 'Return of the Jedi', '0-345-30767-4', '[\"6\",\"7\",\"5\"]', 'Original', 2, NULL, '2018-09-21 00:56:28', '2018-11-10 06:06:50'),
-(5, 2, '[\"5\"]', '2018-09-23', 'Sometimes the only thing to fear…is yourself.', 'In a Dark, Dark Wood', '1501190474', '[\"2\",\"3\"]', 'reprint', 1, NULL, '2018-09-22 21:04:24', '2018-11-08 03:56:47');
+INSERT INTO `books` (`id`, `author_id`, `publisher_id`, `date_published`, `description`, `title`, `isbn`, `categories`, `edition`, `accession_number`, `status`, `deleted_at`, `created_at`, `updated_at`) VALUES
+(3, 2, '[\"1\",\"6\"]', '2007-07-21', 'Throughout the six previous novels in the series, the main character Harry Potter has struggled with the difficulties of adolescence along with being famous as the only wizard to survive the Killing Curse. The curse was cast by the evil Tom Riddle, better known as Lord Voldemort, a powerful evil wizard, who had murdered Harry\'s parents and attempted to kill Harry as a baby, in the belief this would frustrate a prophecy that Harry would become his equal. As an orphan, Harry was placed in the care of his Muggle (non-magical) relatives Petunia Dursley and Vernon Dursley.', 'Harry Potter and the Deathly Hallows', '0-545-01022-5', '[\"6\",\"7\"]', 'UK', '913.136', 'Available', NULL, '2018-09-19 20:51:24', '2018-11-19 07:50:18'),
+(4, 4, '[\"1\"]', '1994-10-01', 'The film was released in theaters on May 25, 1983, six years to the day after the release of the first film, receiving mostly positive reviews. The film grossed between $475 million[4][5] and $572 million worldwide.[6] Several home video and theatrical releases and revisions to the film followed over the next 20 years. 32 years after the film\'s original release, it was followed by a sequel trilogy, beginning in 2015 with The Force Awakens.', 'Return of the Jedi', '0-345-30767-4', '[\"6\",\"7\",\"5\"]', 'Original', '791.567', 'Available', NULL, '2018-09-21 00:56:28', '2018-11-15 03:20:00'),
+(5, 2, '[\"5\"]', '2018-09-23', 'Sometimes the only thing to fear…is yourself.', 'In a Dark, Dark Wood', '1501190474', '[\"2\",\"3\"]', 'reprint', '795.124', 'Available', NULL, '2018-09-22 21:04:24', '2018-11-08 03:56:47'),
+(9, 2, '[\"1\",\"6\"]', '2007-07-21', 'Throughout the six previous novels in the series, the main character Harry Potter has struggled with the difficulties of adolescence along with being famous as the only wizard to survive the Killing Curse. The curse was cast by the evil Tom Riddle, better known as Lord Voldemort, a powerful evil wizard, who had murdered Harry\'s parents and attempted to kill Harry as a baby, in the belief this would frustrate a prophecy that Harry would become his equal. As an orphan, Harry was placed in the care of his Muggle (non-magical) relatives Petunia Dursley and Vernon Dursley.', 'Harry Potter and the Deathly Hallows', '0-545-01022-5', '[\"6\",\"7\"]', 'UK', '913.137', 'Available', NULL, '2018-11-19 03:00:46', '2018-11-19 06:14:58');
 
 -- --------------------------------------------------------
 
@@ -95,13 +112,6 @@ CREATE TABLE `borrows` (
   `returned_on` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `borrows`
---
-
-INSERT INTO `borrows` (`id`, `user_id`, `book_id`, `required_return_date`, `fee`, `created_at`, `updated_at`, `returned_on`, `deleted_at`) VALUES
-(1, 3, 4, '2018-11-09 14:06:48', 5.00, '2018-11-10 06:06:48', '2018-11-10 07:13:35', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -128,7 +138,8 @@ INSERT INTO `categories` (`id`, `name`, `deleted_at`, `created_at`, `updated_at`
 (4, 'Romance', NULL, '2018-09-19 04:47:22', '2018-09-19 04:47:22'),
 (5, 'Sci-fi', NULL, '2018-09-19 04:47:28', '2018-09-19 04:47:28'),
 (6, 'Adventure', NULL, '2018-09-21 00:53:52', '2018-09-21 00:53:52'),
-(7, 'Fiction', NULL, '2018-09-21 00:54:06', '2018-09-21 00:54:06');
+(7, 'Fiction', NULL, '2018-09-21 00:54:06', '2018-09-21 00:54:06'),
+(8, 'Fantasy 2', '2018-11-15 02:40:36', '2018-11-15 02:40:18', '2018-11-15 02:40:28');
 
 -- --------------------------------------------------------
 
@@ -186,12 +197,13 @@ CREATE TABLE `publishers` (
 --
 
 INSERT INTO `publishers` (`id`, `name`, `location`, `deleted_at`, `created_at`, `updated_at`) VALUES
-(1, 'Rex Bookstore', 'Morayta HEHES', NULL, '2018-09-19 02:19:21', '2018-09-19 02:33:29'),
+(1, 'Rex Bookstore', 'Morayta HEHE', NULL, '2018-09-19 02:19:21', '2018-11-19 07:42:35'),
 (2, 'Test', 'Test Location', '2018-09-19 03:36:28', NULL, NULL),
 (3, 'asd', 'qwe', '2018-09-19 03:36:30', '2018-09-19 03:34:15', '2018-09-19 03:34:15'),
 (4, 'rabbitry', 'HEHEHEHE', '2018-09-19 03:36:33', '2018-09-19 03:36:07', '2018-09-19 03:36:07'),
 (5, 'Miriam', 'Morayta', NULL, '2018-09-19 03:37:13', '2018-09-19 03:40:01'),
-(6, 'National', 'Moraytaaa', NULL, '2018-09-19 03:39:28', '2018-09-19 03:40:14');
+(6, 'National', 'Morayta', NULL, '2018-09-19 03:39:28', '2018-11-15 02:39:51'),
+(7, 'Publisher', 'Pasay', '2018-11-15 02:39:59', '2018-11-15 02:39:39', '2018-11-15 02:39:39');
 
 -- --------------------------------------------------------
 
@@ -205,16 +217,32 @@ CREATE TABLE `settings` (
   `display` varchar(50) NOT NULL,
   `value` varchar(50) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `deleted_at` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `settings`
 --
 
-INSERT INTO `settings` (`id`, `name`, `display`, `value`, `created_at`, `updated_at`) VALUES
-(1, 'allowedDays', 'Allowed days', '4', '2018-11-10 05:47:33', '2018-11-10 05:47:33'),
-(2, 'excessFee', 'Excess days fee', '5.0', '2018-11-10 05:47:33', '2018-11-10 05:47:33');
+INSERT INTO `settings` (`id`, `name`, `display`, `value`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(1, 'allowedDays', 'Allowed days', '4', '2018-11-10 05:47:33', '2018-11-16 08:20:15', '0000-00-00 00:00:00'),
+(2, 'excessFee', 'Excess days fee', '5.0', '2018-11-10 05:47:33', '2018-11-10 05:47:33', '0000-00-00 00:00:00');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `transactions`
+--
+
+CREATE TABLE `transactions` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `transaction` varchar(255) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `deleted_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -246,11 +274,18 @@ INSERT INTO `users` (`id`, `account_id`, `type`, `fname`, `lname`, `gender`, `co
 (1, '1', 'Librarian', 'David', 'Mendoza', 'Male', '09154590172', 'librarian@librarian.com', '21232f297a57a5a743894a0e4a801fc3', NULL, '2018-09-19 01:27:36', '2018-09-21 11:48:52', NULL),
 (3, '305414-001', 'Teacher', 'Juan', 'Dela Cruz', 'Male', '09123456789', 'teacher@teacher.com', 'e10adc3949ba59abbe56e057f20f883e', NULL, '2018-09-22 17:07:54', '2018-09-22 17:07:54', NULL),
 (4, '4', 'Staff', 'Lib', 'Rarian', 'Female', '09129876543', 'staff@staff.com', 'e10adc3949ba59abbe56e057f20f883e', NULL, '2018-09-23 03:06:01', '2018-09-23 03:06:01', NULL),
-(5, '305414-000001', 'Student', 'Maria', 'Clara', 'Female', '09123459876', 'student@student.com', 'e10adc3949ba59abbe56e057f20f883e', NULL, '2018-09-23 13:12:03', '2018-09-23 13:12:03', NULL);
+(5, '305414-000001', 'Student', 'Maria', 'Clara', 'Female', '09123459876', 'student@student.com', 'e10adc3949ba59abbe56e057f20f883e', NULL, '2018-09-23 13:12:03', '2018-09-23 13:12:03', NULL),
+(6, '305414-000002', 'Student', 'Student', 'LN', 'Male', '09123456789', 'email@email.com', 'e10adc3949ba59abbe56e057f20f883e', NULL, '2018-11-15 02:38:43', '2018-11-15 02:39:06', '2018-11-15 02:39:20');
 
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `audit_trail`
+--
+ALTER TABLE `audit_trail`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `authors`
@@ -295,6 +330,12 @@ ALTER TABLE `settings`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `transactions`
+--
+ALTER TABLE `transactions`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
@@ -305,28 +346,34 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT for table `audit_trail`
+--
+ALTER TABLE `audit_trail`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `authors`
 --
 ALTER TABLE `authors`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `books`
 --
 ALTER TABLE `books`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `borrows`
 --
 ALTER TABLE `borrows`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `migrations`
@@ -338,7 +385,7 @@ ALTER TABLE `migrations`
 -- AUTO_INCREMENT for table `publishers`
 --
 ALTER TABLE `publishers`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `settings`
@@ -347,10 +394,16 @@ ALTER TABLE `settings`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
+-- AUTO_INCREMENT for table `transactions`
+--
+ALTER TABLE `transactions`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
